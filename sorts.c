@@ -2,36 +2,70 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define ARR_SIZE 10
+#define ARR_SIZE 10000000
 
 void bubble_sort(unsigned int size, char * arr);
 void qsort_sort(unsigned int size, char * arr);
-
+void heap_sort(unsigned int size, char * arr);
 int compar(const void * p1, const void * p2) {
     return *((char*)p1) - *((char*)p2);
 }
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
+	int start_time = time(NULL);
     char arr[ARR_SIZE] = { 0 };
     for (unsigned long long i = 0; i < ARR_SIZE; i++) {
         arr[i] = rand() % 100;
     }
     // bubble_sort(ARR_SIZE, arr);
-    // qsort(arr, ARR_SIZE, sizeof(char), compar);
-    for (int i = 0; i < ARR_SIZE; i++){
-        printf("%5d", arr[i]);
-    }
-    printf("\n");
+    qsort(arr, ARR_SIZE, sizeof(char), compar);
+    //for (int i = 0; i < ARR_SIZE; i++){
+    //    printf("%5d", arr[i]);
+    //}
+    //printf("\n");
 
-    qsort_sort(ARR_SIZE, arr);
+    //heap_sort(ARR_SIZE, arr);
 
-    printf("\n");
-    for (int i = 0; i < ARR_SIZE; i++){
-        printf("%5d", arr[i]);
-    }
+	printf("time: %d\n", time(NULL) - start_time);
+    //printf("\n");
+    //for (int i = 0; i < ARR_SIZE; i++){
+    //    printf("%5d", arr[i]);
+    //}
     printf("\n");
     return 0;
+}
+
+void heapify(char * arr, unsigned int i, unsigned int j);
+void heap_sort(unsigned int size, char * arr) {
+	for (int i = size / 2 - 1; i >= 0; i--) {
+		heapify(arr, (unsigned int)i, size);
+	}
+	for (unsigned int i = size - 1; i >= 1; i--) {
+		arr[i] ^= arr[0];
+		arr[0] ^= arr[i];
+		arr[i] ^= arr[0];
+		heapify(arr, 0, i - 1);
+	}
+}
+
+void heapify(char * arr, unsigned int i, unsigned int j) {
+	char end = 0;
+	unsigned int max;
+	while ((i * 2 < j) && (!end)) {
+		if (arr[i * 2] > arr[i * 2 + 1])
+			max = i * 2;
+		else
+			max = i * 2 + 1;
+		if (arr[i] < arr[max]) {
+			arr[i] ^= arr[max];
+			arr[max] ^= arr[i];
+			arr[i] ^= arr[max];
+			i = max;
+		}
+		else
+			end = 1;
+	}
 }
 
 void qsort_sort(unsigned int size, char * arr) {
@@ -40,7 +74,7 @@ void qsort_sort(unsigned int size, char * arr) {
     }
     unsigned int p = size/2;
 
-    int i = 0, j = size - 1;
+    unsigned int i = 0, j = size - 1;
     for (;;) {
         for (; i <= j && i < size; i++) {
             if (arr[i] >= arr[p])
