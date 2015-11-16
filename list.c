@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+
 typedef struct node_t node;
 struct node_t {
 	unsigned int somedata;

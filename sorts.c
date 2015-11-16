@@ -3,12 +3,13 @@
 #include <time.h>
 #include <string.h>
 
-#define ARR_SIZE 10000000
+#define ARR_SIZE 100000000
 
 void bubble_sort(unsigned int size, char * arr);
 void qsort_sort(unsigned int size, char * arr);
 void heap_sort(unsigned int size, char * arr);
 void merge_sort(void* array, unsigned int size, unsigned int width, int (*compar)(const void *, const void *));
+void shell_sort(unsigned int size, char * arr);
 
 int compar(const void * p1, const void * p2) {
     return *((char*)p1) - *((char*)p2);
@@ -31,16 +32,34 @@ int main(int argc, char *argv[]) {
     // bubble_sort(ARR_SIZE, arr);
     // print(ARR_SIZE, arr);
 
+    shell_sort(ARR_SIZE, arr);
     // heap_sort(ARR_SIZE, arr);
     // merge_sort(arr, ARR_SIZE, sizeof(char), compar);
     // qsort(arr, ARR_SIZE, sizeof(char), compar);
     // mergesort(arr, ARR_SIZE, sizeof(char), compar);
 
 	// printf("time: %d\n", time(NULL) - start_time);
-    // printf("\n");
+    printf("\n");
     // print(ARR_SIZE, arr);
     free(arr);
     return 0;
+}
+
+void shell_sort(unsigned int size, char * arr) {
+    unsigned int i, j, k;
+    char tmp;
+    for (k = size/2; k > 0; k /= 2) {
+        for (i = k; i < size; i++) {
+            tmp = arr[i];
+            for (j = i; j >= k; j -= k) {
+                if (tmp < arr[j - k])
+                    arr[j] = arr[j - k];
+                else
+                    break;
+            }
+            arr[j] = tmp;
+        }
+    }
 }
 
 void merge_sort(void* array, unsigned int size, unsigned int width, int (*compar)(const void *, const void *)) {
