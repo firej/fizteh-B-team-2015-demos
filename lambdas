@@ -1,0 +1,32 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+class MyLambda
+{
+public:
+	MyLambda(int &_base)
+		: m_base(&_base)
+	{}
+
+	bool operator ()(int _n) const
+	{
+		return _n < *m_base;
+	}
+
+private:
+	int *m_base;
+};
+
+int main() {
+	std::vector<int> some;
+	int base = 5;
+	some.push_back(1);
+	some.push_back(5);
+	some.push_back(3);
+	some.push_back(9);
+	std::cout << std::count_if(some.begin(), some.end(), [&](int a) {
+		return a < base;
+	}) << std::endl;
+	return 0;
+}
