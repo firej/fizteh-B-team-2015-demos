@@ -1,0 +1,94 @@
+#include <iostream>
+#include <map>
+#include <string>
+
+class Exception{};
+class KeyError : public Exception{};
+
+
+template<class K, class T>
+class Node {
+public:
+	Node* left;
+	Node* right;
+	Node* parent;
+	K key;
+	T data;
+	Node(K k, T d) : key(k), data(d), left(NULL), right(NULL){}
+};
+
+template <class K, class T>
+class Tree {
+	Node<K, T>* root;
+	Node<K, T>* findNode(K k){
+		if (this->root){
+			if (this->root->key == k) {
+				return root;
+			}
+			Node<K, T>* next = root;
+			while (next && next->key != k) {
+				if (k < next->key) {
+					next = next->left;
+				}
+				else {
+					next = next->right;
+				}
+			}
+			if (next->key == k){
+				return next;
+			}
+		}
+		return NULL;
+	}
+public:
+	Tree(): root(NULL) {};
+	bool add(K k, T d) {
+		if (this->root == NULL) {
+			this->root = new Node<K, T>(k, d);
+			return true;
+		}
+		else {
+			Node<K, T>* next = root;
+			for (;;) {
+				if (next->key == k) {
+					next->data = d;
+					return true;
+				}
+				if (k < next->key) {
+					if (next->left) {
+						next = next->left;
+						continue;
+					}
+					next->left = new Node<K, T>(k, d);
+					return true;
+				}
+				else {
+					if (next->right) {
+						next = next->right;
+						continue;
+					}
+					next->right = new Node<K, T>(k, d);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	T find(K k) {
+		Node<K, T>* tmp = this->findNode(k);
+		if (tmp) {
+			return tmp->data;
+		}
+		else {
+			throw KeyError();
+		}
+	}
+};
+
+
+int main(){
+	Tree<int, int> t;
+	std::cout << t.add(5, 10) << t.add(7, 17) << t.add(3, 166) << t.add(2, 12) << std::endl;
+	std::cout << t.find(5) << std::endl;
+	return 0;
+}
